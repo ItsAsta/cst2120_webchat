@@ -1,0 +1,234 @@
+body {
+    font-family: Roboto, serif;
+    background-color: #36454f;
+    padding: 0;
+    margin: 0;
+    color: white;
+}
+
+/* NAVIGATION BAR */
+.navigation {
+    min-width: 100%;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+ul {
+    background-color: #596973;
+    list-style-type: none;
+    margin: 0;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid white;
+}
+
+li {
+    margin: 0;
+    color: white;
+    display: inline;
+}
+
+li a {
+    padding: 15px 16px;
+
+}
+
+li a:hover {
+    background-color: #36454f;
+    color: white;
+    cursor: pointer;
+}
+
+.banner {
+    height: 100px;
+    width: auto;
+    background-color: white;
+}
+
+/* CHAT SECTION */
+.chatContainer {
+    max-width: 1024px;
+    max-height: 650px;
+    height: 650px;
+    width: 80%;
+    margin: 0 auto;
+    border: 2px solid #2b3944;
+    position: relative;
+}
+
+#messageContainer {
+    overflow: auto;
+    height: 580px;
+    color: white;
+    width: 100%;
+}
+
+#messageContainer div {
+    background-color: #1d2c37;
+    padding: 5px;
+    white-space: pre-wrap;      /* CSS3 */
+    white-space: -moz-pre-wrap; /* Firefox */
+    white-space: -o-pre-wrap;   /* Opera 7 */
+    word-wrap: break-word;      /* IE */
+}
+
+#messageContainer div:nth-child(2n) {
+    background-color: #36454f;
+}
+
+#sendContainer {
+    border-top: 2px solid #2b3944;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    background-color: #1d2c37;
+}
+
+#sendContainer button {
+    height: 42px;
+}
+
+#messageInput {
+    width: 90%;
+    height: 30px;
+    color: white;
+    padding: 5px 5px;
+    background-color: #1d2c37;
+    border: 1px solid white;
+}
+
+#messageInput:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+
+/* LOGIN SECTION */
+
+.loginContainer {
+    background-color: inherit;
+    /*margin-top: 50px;*/
+    width: 50%;
+    margin: 50px auto;
+    margin-bottom: 350px;
+    min-height: 200px;
+    text-align: center;
+    border: 1px solid white;
+}
+
+.loginContainer input {
+    margin: 10px auto;
+    display: block;
+    text-align: center;
+    width: 200px;
+    height: 25px;
+    border-radius: 5px;
+    border: none;
+}
+
+.loginContainer p {
+
+}
+.loginContainer a {
+    color: #cccccc;
+}
+
+.loginContainer a:hover {
+    cursor: pointer;
+    color: white;
+}
+
+.loginContainer input:focus {
+    outline: none;
+    box-shadow: 0 0 10px black;
+}
+
+.loginContainer button {
+    width: 200px;
+    height: 25px;
+    border-radius: 5px;
+    border: none;
+}
+
+.loginContainer button:focus {
+    outline: none;
+}
+
+.loginContainer button:hover {
+    cursor: pointer;
+    box-shadow: 0 0 10px black;
+    border: 1px solid white;
+    background-color: #ebebeb;
+}
+
+.loginContainer h4 {
+    color: white;
+    padding-top: 10px;
+}
+
+/* REGISTER SECTION */
+
+.registerContainer {
+    background-color: inherit;
+    /*margin-top: 50px;*/
+    width: 50%;
+    margin: 50px auto;
+    margin-bottom: 350px;
+    min-height: 200px;
+    text-align: center;
+    border: 1px solid white;
+}
+
+.registerContainer input {
+    margin: 10px auto;
+    display: block;
+    text-align: center;
+    width: 200px;
+    height: 25px;
+    border-radius: 5px;
+    border: none;
+}
+
+.registerContainer p {
+
+}
+.registerContainer a {
+    color: #cccccc;
+}
+
+.registerContainer a:hover {
+    cursor: pointer;
+    color: white;
+}
+
+.registerContainer input:focus {
+    outline: none;
+    box-shadow: 0 0 10px black;
+}
+
+.registerContainer button {
+    width: 200px;
+    height: 25px;
+    border-radius: 5px;
+    border: none;
+}
+
+.registerContainer button:focus {
+    outline: none;
+}
+
+.registerContainer button:hover {
+    cursor: pointer;
+    box-shadow: 0 0 10px black;
+    border: 1px solid white;
+    background-color: #ebebeb;
+}
+
+.registerContainer h4 {
+    color: white;
+    padding-top: 10px;
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="assets/stylesheets/stylesheet.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script defer src="/socket.io/socket.io.js"></script>
+    <script defer src="assets/javascripts/client.js"></script>
+    <script defer src="assets/javascripts/clientInteraction.js"></script>
+
+</head>
+<body>
+
+<div class="banner">
+
+</div>
+<div class="navigation">
+    <ul>
+        <li id="chatNav"><a>Chat</a></li>
+        <li id="loginNav"><a>Login</a></li>
+    </ul>
+</div>
+<div class="chatContainer">
+    <div id="messageContainer">
+    </div>
+    <form id="sendContainer">
+        <input autocomplete="off" type="text" id="messageInput">
+        <button type="submit" id="sendButton">Send</button>
+    </form>
+</div>
+
+<div class="loginContainer" id="loginContainer">
+    <h4>LOGIN</h4>
+    <hr>
+    <input type="text" placeholder="Username">
+    <input type="password" placeholder="Password">
+    <button type="button">Login</button>
+    <p>Not Registered? <a id="registerText">Register</a></p>
+</div>
+
+<div class="registerContainer">
+  <h4>Register</h4>
+  <hr>
+  <input type="text" placeholder="Username">
+  <input type="text" placeholder="Confirm Username">
+  <input type="password" placeholder="Password">
+  <input type="password" placeholder="Confirm Password">
+  <button type="button">Register</button>
+  <p>Already Registered? <a id="loginText">Login</a></p>
+</div>
+</body>
+</html>
