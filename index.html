@@ -20,7 +20,7 @@
 <div class="navigation">
     <ul>
         <li id="chatNav"><a>Chat</a></li>
-        <li id="loginNav"><a>Login</a></li>
+        <li id="loginNav"><a id="status">Login</a></li>
     </ul>
 </div>
 <div class="chatContainer">
@@ -35,15 +35,17 @@
 <div class="loginContainer" id="loginContainer">
     <h4>LOGIN</h4>
     <hr>
+    <label id="loginError">ERROR</label>
     <input type="text" placeholder="Username" id="loginUsername">
     <input type="password" placeholder="Password" id="loginPassword">
     <button type="button" id="loginBtn">Login</button>
     <p>Not Registered? <a id="registerText">Register</a></p>
 </div>
 
-<div class="registerContainer">
+<div class="registerContainer" id="registerContainer">
   <h4>Register</h4>
   <hr>
+    <label id="registerError">ERROR</label>
   <input type="text" placeholder="Username" id="registerUsername">
   <input type="text" placeholder="Confirm Username" id="confirmUsername">
   <input type="password" placeholder="Password" id="registerPassword">

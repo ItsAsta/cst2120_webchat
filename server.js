@@ -23,9 +23,9 @@ app.get('/', function (req, res) {
 
 // Connect to a socket for socket operations
 io.on('connection', socket => {
-   // Add new connection to our socket array
-   connections.push(socket);
-   console.log('Connected: %s sockets connected!', connections.length);
+    // Add new connection to our socket array
+    connections.push(socket);
+    console.log('Connected: %s sockets connected!', connections.length);
 
     // Make socket listen to socket disconnections
     socket.on('disconnect', data => {
@@ -58,6 +58,11 @@ io.on('connection', socket => {
         loginUser(socket, parsedData.username, parsedData.password);
     });
 
+    socket.on('updateDbChat', data => {
+        let parsedData = JSON.parse(data);
+        updateChatDb(socket, parsedData.username, parsedData.message);
+    });
+
     // Execute the database function responsible to fetch all the chat messages
     getChat(socket)
 });
@@ -73,18 +78,35 @@ const connectionPool = mysql.createPool({
     dateStrings: true
 });
 
+function getDateTime() {
+    return new Date().toISOString().slice(0, 19).replace('T', ' ');
+}
+
+function updateChatDb(socket, username, message) {
+    let query = "INSERT INTO chats (username, message, date) " +
+        " VALUES ('" + username + "', '" + message + "', '" + getDateTime() + "')";
+
+    //Execute query and register user
+    connectionPool.query(query, (err, result) => {
+        if (err) {//Check for errors
+            console.error("Error executing query: " + JSON.stringify(err));
+        } else {
+            console.log("Stored message")
+        }
+    });
+
+}
 
 /* Outputs all of the chat */
-function getChat(socket){
+function getChat(socket) {
     //Build query to select the chats from the database
     let sql = "SELECT * FROM chats";
 
     //Execute query and output results
     connectionPool.query(sql, (err, result) => {
-        if (err){//Check for errors
+        if (err) {//Check for errors
             console.error("Error executing query: " + JSON.stringify(err));
-        }
-        else{//Output results in JSON format - a web service would return this string.
+        } else {//Output results in JSON format - a web service would return this string.
 
             socket.emit('allMessages', result)
         }
@@ -98,7 +120,7 @@ function registerUser(socket, username, password) {
     let checkUserQuery = "SELECT * FROM users WHERE username = '" + username + "'";
 
     connectionPool.query(checkUserQuery, (err, result) => {
-        if (err){//Check for errors
+        if (err) {//Check for errors
             console.error("Error executing query: " + JSON.stringify(err));
         }
 
@@ -110,7 +132,7 @@ function registerUser(socket, username, password) {
         } else {
             //Execute query and register user
             connectionPool.query(query, (err, result) => {
-                if (err){//Check for errors
+                if (err) {//Check for errors
                     console.error("Error executing query: " + JSON.stringify(err));
                 } else {
                     console.log("Registered User")
@@ -127,7 +149,7 @@ function loginUser(socket, username, password) {
 
     connectionPool.query(checkUserQuery, (err, result) => {
         //Check for errors
-        if (err){
+        if (err) {
             console.error("Error executing query: " + JSON.stringify(err));
         }
 
@@ -135,7 +157,8 @@ function loginUser(socket, username, password) {
         console.log(result);
         if (result.length > 0) {
             //Handle login
-            console.log("User logged in!")
+            socket.emit('loggedIn', result[0].username);
+            console.log("User logged in! " + result[0].username)
         } else {
             //Handle user not registered
             console.log("User not found!")
