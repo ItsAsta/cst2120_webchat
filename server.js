@@ -27,6 +27,11 @@ io.on('connection', socket => {
     connections.push(socket);
     console.log('Connected: %s sockets connected!', connections.length);
 
+    socket.on('newConnection', name => {
+        users[socket.id] = name;
+        socket.broadcast.emit('userConnected', name);
+    });
+
     // Make socket listen to socket disconnections
     socket.on('disconnect', data => {
         // Remove the socket from our connections array
@@ -37,7 +42,7 @@ io.on('connection', socket => {
     // Make socket listen to a new chat message from our client
     socket.on('sendChatMessage', message => {
         // send the message back to the client to display it
-        socket.broadcast.emit('chatMessage', message);
+        socket.broadcast.emit('chatMessage', { message: message, name: users[socket.id]});
     });
 
     // Make a socket listen to the client when they click the register button on the form
@@ -100,7 +105,7 @@ function updateChatDb(socket, username, message) {
 /* Outputs all of the chat */
 function getChat(socket) {
     //Build query to select the chats from the database
-    let sql = "SELECT * FROM chats";
+    let sql = "SELECT * FROM chats where date > date_sub(now(), interval 1 week)";
 
     //Execute query and output results
     connectionPool.query(sql, (err, result) => {

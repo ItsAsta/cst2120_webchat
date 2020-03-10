@@ -8,9 +8,12 @@ $(document).ready(function () {
 
     if (sessionStorage.length > 0) {
         loggedInUser = sessionStorage.getItem('username');
+        socket.emit('newConnection', loggedInUser);
         $("#status").text("Logout");
     } else {
         $("#status").text("Login");
+        $("#loginContainer").show();
+        $(".chatContainer").hide();
     }
 
     var $section = $('#loginContainer'),
@@ -62,40 +65,43 @@ socket.on('loggedIn', data => {
     }
 });
 
+socket.on('userConnected', name => {
+    appendMessage(`${name} has connected!`, "green")
+});
+
 socket.on('chatMessage', data => {
-    appendMessage(`User: ${data}`);
+    appendMessage(`${getDateTime()} | ${data.name}: ${data.message}`, "white");
 });
 
 socket.on('allMessages', data => {
     console.log(data);
+    if (data.length >= 50) {
+        for (let i = data.length - 50; i <= data.length; i++) {
+            appendMessage(`${data[i].date} | ${data[i].username}: ${data[i].message}`, "white");
+        }
+    } else {
+        data.forEach(message => {
+            appendMessage(`${message.date} | ${message.username}: ${message.message}`, "white");
+        });
+    }
 
-    data.forEach(message => {
-        appendMessage(`${message.date} | ${message.username}: ${message.message}`);
-    });
+    appendMessage("You have connected!", "green");
 });
 
 messageForm.addEventListener('submit', e => {
     e.preventDefault();
     const message = messageInput.value;
-    messageJson.username = loggedInUser;
-    messageJson.message = message;
 
-    passChatDb();
-    appendMessage(`${getDateTime()} | ${loggedInUser}: ${message}`);
-    socket.emit('sendChatMessage', message);
-    messageInput.value = '';
-});
+    if (message.trim().length > 0) {
+        messageJson.username = loggedInUser;
+        messageJson.message = message;
 
-function getDateTime() {
-    return new Date().toISOString().slice(0, 19).replace('T', ' ');
-}
-
-function passChatDb() {
-    if (Object.keys(messageJson).length > 0) {
-        console.log(messageJson);
-        socket.emit('updateDbChat', JSON.stringify(messageJson));
+        passChatDb();
+        appendMessage(`${getDateTime()} | ${loggedInUser}: ${message}`, "white");
+        socket.emit('sendChatMessage', message);
+        messageInput.value = '';
     }
-}
+});
 
 registerBtn.addEventListener('click', e => {
     e.preventDefault();
@@ -142,6 +148,16 @@ loginBtn.addEventListener('click', e => {
 
 });
 
+function getDateTime() {
+    return new Date().toISOString().slice(0, 19).replace('T', ' ');
+}
+
+function passChatDb() {
+    if (Object.keys(messageJson).length > 0) {
+        console.log(messageJson);
+        socket.emit('updateDbChat', JSON.stringify(messageJson));
+    }
+}
 
 $("body").on('DOMSubtreeModified', messageContainer, function () {
     updateScroll();
@@ -152,8 +168,9 @@ function updateScroll() {
     element.scrollTop = element.scrollHeight;
 }
 
-function appendMessage(message) {
+function appendMessage(message, color) {
     const messageElement = document.createElement('div');
+    messageElement.setAttribute('style', 'color:' + color);
     messageElement.innerText = message;
     messageContainer.append(messageElement);
 }
