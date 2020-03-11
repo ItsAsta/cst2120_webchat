@@ -27,8 +27,11 @@ io.on('connection', socket => {
     connections.push(socket);
     console.log('Connected: %s sockets connected!', connections.length);
 
+    /*Listen to a new connection then store the new user in our array*/
     socket.on('newConnection', name => {
+        /*Store the new connected user in an array*/
         users[socket.id] = name;
+        /*Broadcast the message over to other connected users that a new user has connected*/
         socket.broadcast.emit('userConnected', name);
     });
 
@@ -63,8 +66,11 @@ io.on('connection', socket => {
         loginUser(socket, parsedData.username, parsedData.password);
     });
 
+    /*Listen to a request from the client to update the database*/
     socket.on('updateDbChat', data => {
+        /*Parse the json data to get the content*/
         let parsedData = JSON.parse(data);
+        /*Execute the update chat function passing in the socket, username of the users and their message*/
         updateChatDb(socket, parsedData.username, parsedData.message);
     });
 
@@ -83,20 +89,22 @@ const connectionPool = mysql.createPool({
     dateStrings: true
 });
 
+/*A simple function that returns a date and time that is formatted compatible for MySQL*/
 function getDateTime() {
     return new Date().toISOString().slice(0, 19).replace('T', ' ');
 }
 
+/*This function is responsible of updating the database with the new message, taking in 3 arguments*/
 function updateChatDb(socket, username, message) {
-    let query = "INSERT INTO chats (username, message, date) " +
+    /*A simple query that inserts into the database*/
+    const query = "INSERT INTO chats (username, message, date) " +
         " VALUES ('" + username + "', '" + message + "', '" + getDateTime() + "')";
 
-    //Execute query and register user
+    //Execute query and insert the new query into our database
     connectionPool.query(query, (err, result) => {
-        if (err) {//Check for errors
+        //Check for errors
+        if (err) {
             console.error("Error executing query: " + JSON.stringify(err));
-        } else {
-            console.log("Stored message")
         }
     });
 
@@ -104,32 +112,36 @@ function updateChatDb(socket, username, message) {
 
 /* Outputs all of the chat */
 function getChat(socket) {
-    //Build query to select the chats from the database
+    //Build query to select the chats from the database within the last week
     let sql = "SELECT * FROM chats where date > date_sub(now(), interval 1 week)";
 
     //Execute query and output results
     connectionPool.query(sql, (err, result) => {
         if (err) {//Check for errors
             console.error("Error executing query: " + JSON.stringify(err));
-        } else {//Output results in JSON format - a web service would return this string.
+        } else {
+            /*Send the data to the client with the results*/
             socket.emit('allMessages', result)
         }
     });
 }
 
+/*A function that registers the user to our database taking 3 arguments*/
 function registerUser(socket, username, password) {
+    /*A query that inserts the username and password that is passed within the parameters into our database*/
     let query = "INSERT INTO users (username, password) " +
         " VALUES ('" + username + "', '" + password + "')";
 
+    /*This query checks if we already got a user registered in our database*/
     let checkUserQuery = "SELECT * FROM users WHERE username = '" + username + "'";
 
+    /*Execute the query to check if the user is already registered*/
     connectionPool.query(checkUserQuery, (err, result) => {
         if (err) {//Check for errors
             console.error("Error executing query: " + JSON.stringify(err));
         }
 
         // Checks the length of the result to see if our query has found a user with the same username registered
-        console.log(result);
         if (result.length > 0) {
             //Handle that the username has already been registered.
             console.log("User already registered!")
@@ -146,6 +158,7 @@ function registerUser(socket, username, password) {
     });
 }
 
+/*A function that logins the user*/
 function loginUser(socket, username, password) {
 
     // Make a query to check if we got a username and password that match what the user has entered
@@ -162,7 +175,6 @@ function loginUser(socket, username, password) {
         if (result.length > 0) {
             //Handle login
             socket.emit('loggedIn', result[0].username);
-            console.log("User logged in! " + result[0].username)
         } else {
             //Handle user not registered
             console.log("User not found!")
