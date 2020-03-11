@@ -74,9 +74,8 @@ socket.on('chatMessage', data => {
 });
 
 socket.on('allMessages', data => {
-    console.log(data);
     if (data.length >= 50) {
-        for (let i = data.length - 50; i <= data.length; i++) {
+        for (let i = data.length - 51; i < data.length; i++) {
             appendMessage(`${data[i].date} | ${data[i].username}: ${data[i].message}`, "white");
         }
     } else {

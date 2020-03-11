@@ -112,7 +112,6 @@ function getChat(socket) {
         if (err) {//Check for errors
             console.error("Error executing query: " + JSON.stringify(err));
         } else {//Output results in JSON format - a web service would return this string.
-
             socket.emit('allMessages', result)
         }
     });
@@ -170,6 +169,5 @@ function loginUser(socket, username, password) {
         }
     });
 }
-
 
 app.use('/assets', express.static('assets'));
